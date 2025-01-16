@@ -1,5 +1,4 @@
-**Note - Please click on view raw**
-
+**Note: Please click on "View Raw," and the file will be downloaded to your system, as they are .doc and .pbix files.**
 
 **Data Analytics Project for Bank transactions**
 Data Analytics Project for Bank transactions
@@ -27,3 +26,8 @@ Retail Domain :- Business Insights 360 – Coffee shop
 -Analyzed large datasets to identify trends, patterns, and insights related to customer behavior, loan amount, loan payment, and financial loan performance using SQL. 
 -Developed interactive dashboards and reports in Power BI to provide real-time insights to stakeholders and support data-driven decision-making. 
 -Presented findings & recommendations to senior management through detailed reports and visualizations.
+
+** Spotify song Analysis**
+- Analyzed Spotify song datasets to uncover trends in music popularity, genre preferences, and song features (e.g., tempo, loudness, energy) influencing user engagement.
+- Utilized Python (Pandas, Matplotlib, and Seaborn) for data cleaning and visualization. Applied SQL for querying large datasets and explored correlations between song attributes and popularity scores.Delivered actionable insights for potential playlist optimization.
+- Provided an interactive dashboard using Power BI, allowing stakeholders to filter and analyze songs by attributes, popularity, or genre, supporting data-driven decisions for playlist curation and marketing strategies.
