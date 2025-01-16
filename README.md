@@ -1,3 +1,6 @@
+**Note - Please click on view raw**
+
+
 **Data Analytics Project for Bank transactions**
 Data Analytics Project for Bank transactions
 • Improved banking efficiency and decision-making by 12% through data analysis, leveraging SQL and Power BI to analyse large banking datasets and create interactive dashboards.
