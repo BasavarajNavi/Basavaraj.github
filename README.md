@@ -10,11 +10,15 @@ support informed decision-making. Conducted exploratory data analysis (EDA), Dev
 advanced statistical models that help clients understand dynamic business issues. 
 • Examined customer behavior and product performance through SQL queries.
 
+**Customer Churn Sales Analysis ProjecteditOneTheme**
+•Data accuracy and reducing analysis time by 15%, the development of a customer segmentation model to target marketing efforts effectively, resulting in increased customer engagement. 
+•Designed Power BI DAX, KPIs, CRM report, manipulate data using SQL to increasing analysis productivity, focused on key KPIs, Manage roles, Charts, visualizations for impactful insights.
+
 **Retail Domain :- Business Insights 360 – Coffee shop**
 Retail Domain :- Business Insights 360 – Coffee shop
 -Customized a multi-functional Power BI dashboard to analyze Atliq hardware's sales trends over the global market by gathering data from 2 different sources (Excel/CSV files and a SQL database). 
--Built data models and visualizations in Power BI and optimized the report with DAX Studio, improving report performance by 5%.
-o Enabled data-driven decisions by analyzing department sales trends, leading to a projected 10% revenue acceleration and 20% reduction in data-related expenses.
+- Built data models and visualizations in Power BI and optimized the report with DAX Studio, improving report performance by 5%.
+- Enabled data-driven decisions by analyzing department sales trends, leading to a projected 10% revenue acceleration and 20% reduction in data-related expenses.
 
 **Finacial Loan Performance - On-site**
 -Analyzed large datasets to identify trends, patterns, and insights related to customer behavior, loan amount, loan payment, and financial loan performance using SQL. 
