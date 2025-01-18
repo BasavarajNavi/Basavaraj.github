@@ -1,0 +1,216 @@
+MY SQL QUERIES
+COFFEE SHOP SALES PROJECT
+
+# CONVERT DATE (transaction_date) COLUMN TO PROPER DATE FORMAT
+
+update coffee
+set transaction_date = str_to_date(transaction_date, "%d-%m-%Y");
+ALTER DATE (transaction_date) COLUMN TO DATE DATA TYPE
+
+Alter table coffee
+modify column transaction_date date;
+
+# CONVERT TIME (transaction_time)  COLUMN TO PROPER DATE FORMAT
+update coffee
+set transaction_time = str_to_date(transaction_time, "%H:%i:%s");
+
+ALTER TIME (transaction_time) COLUMN TO DATE DATA TYPE
+Alter table coffee
+modify column transaction_time time;
+
+DATA TYPES OF DIFFERENT COLUMNS
+describe coffee;
+ 
+CHANGE COLUMN NAME `ï»¿transaction_id` to transaction_id
+ALTER TABLE coffee
+CHANGE COLUMN `¿transaction_id` transaction_id INT;
+
+# TOTAL SALES
+select sum(transaction_qty * unit_price) as total_sales from coffee;
+
+TOTAL SALES KPI - MOM DIFFERENCE AND MOM GROWTH
+select 
+month(transaction_date) as month,    	--- no of months
+	round(sum(transaction_qty * unit_price)) as total_sales, 	-- total sales column
+    	(sum(unit_price * transaction_qty) - lag(sum(unit_price * transaction_qty) , 1) 	 -- previous month sales difference
+    over (order by month(transaction_date))) / lag(sum(unit_price * transaction_qty) , 1)    -- division by pm sales
+    over (order by month(transaction_date)) * 100 as MoM_Increase_percentage  --  percentage
+from coffee
+where month(transaction_date) in (1,4,5,6)
+group by month(transaction_date)
+order by  month(transaction_date);
+ 
+# TOTAL ORDERS
+select month(transaction_date), count(transaction_id) as Total_orders 
+from coffee
+where month(transaction_date) 
+group by month(transaction_date);
+ 
+TOTAL ORDERS KPI - MOM DIFFERENCE AND MOM GROWTH
+select 
+	month(transaction_date) as month,
+    count(transaction_id) as total_orders,
+    (count(transaction_id) - lag(count(transaction_id),1)
+    over(order by month(transaction_date))) / lag(count(transaction_id),1)
+    over(order by month(transaction_date)) * 100 as MoM_increase_percentage
+from coffee
+	where month(transaction_date) 
+group by month(transaction_date)
+order by month(transaction_date);
+ 
+# TOTAL QUANTITY SOLD
+select month(transaction_date) as month, sum(transaction_qty) as Total_quantity from coffee
+where month(transaction_date)
+group by month(transaction_date);
+ 
+# TOTAL QUANTITY SOLD KPI - MOM DIFFERENCE AND MOM GROWTH
+select 
+	month(transaction_date) as month,
+    sum(transaction_qty) as total_Qty,
+    (sum(transaction_qty) - lag(sum(transaction_qty),1)
+    over(order by month(transaction_date))) / lag(count(transaction_id),1)
+    over(order by month(transaction_date)) * 100 as MoM_increase_percentage
+from coffee
+	where month(transaction_date) 
+group by month(transaction_date)
+order by month(transaction_date);
+ 
+# CALENDAR TABLE – DAILY SALES, QUANTITY and TOTAL ORDERS
+select transaction_date, 
+	count(transaction_id) as Total_order, 
+	sum(transaction_qty) as total_qty, 
+    round(sum(unit_price * transaction_qty),1) as Total_sales
+from coffee
+where transaction_date= '2023-01-01';
+ 
+SALES TREND OVER PERIOD
+DAILY SALES FOR MONTH SELECTED
+select 
+	day(transaction_date) as day_of_month,
+    sum(transaction_qty * unit_price) as total_sales
+from coffee
+where month(transaction_date)= 5
+group by day(transaction_date)
+order by day(transaction_date) asc;
+ 
+
+COMPARING DAILY SALES WITH AVERAGE SALES – IF GREATER THAN “ABOVE AVERAGE” and LESSER THAN “BELOW AVERAGE”
+SELECT 
+    day_of_month,
+    CASE 
+        WHEN total_sales > avg_sales THEN 'Above Average'
+        WHEN total_sales < avg_sales THEN 'Below Average'
+        ELSE 'Average'
+    END AS sales_status,
+    total_sales
+FROM (
+    SELECT 
+        DAY(transaction_date) AS day_of_month,
+        SUM(unit_price * transaction_qty) AS total_sales,
+        AVG(SUM(unit_price * transaction_qty)) OVER () AS avg_sales
+    FROM 
+        coffee_shop_sales
+    WHERE 
+        MONTH(transaction_date) = 5  -- Filter for May
+    GROUP BY 
+        DAY(transaction_date)
+) AS sales_data
+ORDER BY 
+    day_of_month;
+  
+# SALES BY WEEKDAY / WEEKEND:
+-- weekdays - Monday - Friday
+-- weekends -- Saturday and Sunday -- Sun = 1 Saturday= 7
+select 
+	case when dayofweek(transaction_date) in (1,7) then 'weekends'
+    else 'weekdays'
+    end as daytype,
+    sum(transaction_qty * unit_price) as total_sales 
+from coffee
+where month(transaction_date) = 5
+group by 	
+case when dayofweek(transaction_date) in (1,7) then 'weekends'
+    else 'weekdays' end;
+ 
+# SALES BY STORE LOCATION
+select 
+	store_location,
+    sum(transaction_qty * unit_price) as total_sales
+from coffee
+where month(transaction_date)= 2
+group by store_location
+order by total_sales desc;
+ 
+# SALES BY PRODUCT CATEGORY
+select product_category,
+	sum(transaction_qty * unit_price) as total_sales from coffee  
+	WHERE MONTH(transaction_date) = 5 
+group by product_category
+ORDER BY SUM(unit_price * transaction_qty) DESC;
+ 
+# SALES BY PRODUCTS (TOP 10)
+SELECT  product_type,
+	SUM(unit_price * transaction_qty) as Total_Sales
+FROM coffee_shop_sales
+WHERE MONTH(transaction_date) = 5 
+GROUP BY product_type
+ORDER BY SUM(unit_price * transaction_qty) DESC
+LIMIT 10
+ 
+
+# SALES BY DAY | HOUR
+SELECT 
+    ROUND(SUM(unit_price * transaction_qty)) AS Total_Sales,
+    SUM(transaction_qty) AS Total_Quantity,
+    COUNT(*) AS Total_Orders
+FROM 
+    coffee_shop_sales
+WHERE 
+    DAYOFWEEK(transaction_date) = 3 -- Filter for Tuesday (1 is Sunday, 2 is Monday, ..., 7 is Saturday)
+    AND HOUR(transaction_time) = 8 -- Filter for hour number 8
+    AND MONTH(transaction_date) = 5; -- Filter for May (month number 5)
+
+ 
+# TO GET SALES FOR ALL HOURS FOR MONTH OF MAY
+SELECT 
+    CASE 
+        WHEN DAYOFWEEK(transaction_date) = 2 THEN 'Monday'
+        WHEN DAYOFWEEK(transaction_date) = 3 THEN 'Tuesday'
+        WHEN DAYOFWEEK(transaction_date) = 4 THEN 'Wednesday'
+        WHEN DAYOFWEEK(transaction_date) = 5 THEN 'Thursday'
+        WHEN DAYOFWEEK(transaction_date) = 6 THEN 'Friday'
+        WHEN DAYOFWEEK(transaction_date) = 7 THEN 'Saturday'
+        ELSE 'Sunday'
+    END AS Day_of_Week,
+    ROUND(SUM(unit_price * transaction_qty)) AS Total_Sales
+FROM 
+    coffee_shop_sales
+WHERE 
+    MONTH(transaction_date) = 5 -- Filter for May (month number 5)
+GROUP BY 
+    CASE 
+        WHEN DAYOFWEEK(transaction_date) = 2 THEN 'Monday'
+        WHEN DAYOFWEEK(transaction_date) = 3 THEN 'Tuesday'
+        WHEN DAYOFWEEK(transaction_date) = 4 THEN 'Wednesday'
+        WHEN DAYOFWEEK(transaction_date) = 5 THEN 'Thursday'
+        WHEN DAYOFWEEK(transaction_date) = 6 THEN 'Friday'
+        WHEN DAYOFWEEK(transaction_date) = 7 THEN 'Saturday'
+        ELSE 'Sunday'
+    END;
+
+ 
+# TO GET SALES FOR ALL HOURS FOR MONTH OF MAY
+SELECT 
+    HOUR(transaction_time) AS Hour_of_Day,
+    ROUND(SUM(unit_price * transaction_qty)) AS Total_Sales
+FROM 
+    coffee_shop_sales
+WHERE 
+    MONTH(transaction_date) = 5 -- Filter for May (month number 5)
+GROUP BY 
+    HOUR(transaction_time)
+ORDER BY 
+    HOUR(transaction_time);
+
+
+Thank You
